@@ -29,7 +29,7 @@ Shadow_Directory::ObtainChunkURL
     std::cout << "calling NFS LookUp" << std::endl;
 
     myv = myClient.ObtainChunkURL("ObtainChunkURL", "This is a Directory JSON string!",
-			  (this->class_id).c_str(), arg_fhandle, arg_name, arg_chunk_index,
+			  arg_chunk_index, (this->class_id).c_str(), arg_fhandle, arg_name,
 			  (this->host_url).c_str(),
 			  (this->object_id).c_str(), (this->owner_vsID).c_str());
     cout << myv.toStyledString() << endl;

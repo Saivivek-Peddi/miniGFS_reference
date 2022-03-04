@@ -57,6 +57,7 @@ Myminigfs_Server::ObtainChunkURL
     }
   else
     {
+	  std::cout << "Master::ObtainChunkURL() was hit\n";
       result = mounted->ObtainChunkURL(filename, fhandle, chunkindex);
     }
 

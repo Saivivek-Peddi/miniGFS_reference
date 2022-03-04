@@ -71,8 +71,12 @@ Replica::CommitAbort
 {
   Json::Value result;
   //
+  result["commitOrAbort"] = "abort";
   if (arg_commitorabort == "commit")
-    (this->committed_data).data  = (this->uncommitted_data).data;
+  {
+	  (this->committed_data).data = (this->uncommitted_data).data;
+	  result["commitOrAbort"] = "commit";
+  }
 
   return result;
 }
@@ -84,6 +88,7 @@ Replica::PushChunk2Replica
   Json::Value result;
   //
   (this->uncommitted_data).data = arg_chunk;
+  result["status"] = "success";
   return result;
 }
 

@@ -18,7 +18,8 @@
 #include "Core.h"
 #include "Directory.h"
 #include "Shadow_Directory.h"
-#include <time.h>
+#include <ctime>
+#include "Replica.h"
 
 using namespace jsonrpc;
 using namespace std;
@@ -42,6 +43,7 @@ Myminigfs_Server::Myminigfs_Server(AbstractServerConnector &connector, serverVer
 }
 
 Directory *mounted;
+Replica* primaryReplica;
 
 // member function
 
@@ -58,9 +60,15 @@ Json::Value
 Myminigfs_Server::PushChunk2Replica
 (const std::string& action, const std::string& arguments, const std::string& chunk, const std::string& chunkindex, const std::string& class_id, const std::string& fhandle, const std::string& filename, const std::string& host_url, const std::string& object_id, const std::string& owner_vsID)
 {
-  Json::Value result;
-  //
-  return result;
+	Json::Value result, pushResult;
+	//
+	std::cout << "Primary::PushChunk2Replica() was hit\n";
+	
+	pushResult = primaryReplica->PushChunk2Replica(filename, fhandle, chunkindex, chunk);
+	if (pushResult["status"] == "success")
+		result["vote"] = "commit";
+	
+	return result;
 }
 
 Json::Value
@@ -69,6 +77,8 @@ Myminigfs_Server::CommitAbort
 {
   Json::Value result;
   //
+  std::cout << "Primary::CommitAbort() was hit with action = " << commitorabort << "\n";
+  result = primaryReplica->CommitAbort(filename, fhandle, chunkindex, commitorabort);
   return result;
 }
 
@@ -148,8 +158,13 @@ main()
   { "http://169.237.6.102", "1234567890", "Directory", "00000000", "root", "00000002" };
 
   mounted = (&NFS_root);
+  
+  Replica replica
+	  {"http://169.237.6.102", "primary replica vs_id", "primary replica class_id", "primary replica object_id"};
 
-  HttpServer httpserver(8384);
+  primaryReplica = &replica;
+  
+  HttpServer httpserver(8300);
   Myminigfs_Server s(httpserver,
 		JSONRPC_SERVER_V1V2); // hybrid server (json-rpc 1.0 & 2.0)
   s.StartListening();
