@@ -94,3 +94,23 @@ Shadow_Replica::Jdump
 {
   return false;
 }
+Json::Value Shadow_Replica::ReadChunk(const string& fileName, const string& fileHandle, const string& chunkIndex)
+{
+	HttpClient httpclient(this->host_url);
+	minigfs_Client myClient(httpclient, JSONRPC_CLIENT_V2);
+	Json::Value myv;
+
+	try {
+		std::cout << "calling Read Chunk LookUp" << std::endl;
+
+		myv = myClient.ReadChunk("ReadChunk", "This is a Read Chunk JSON string!",
+			chunkIndex, this->class_id,
+			fileHandle, fileName, this->host_url,
+			this->object_id,
+			this->owner_vsID);
+		cout << myv.toStyledString() << endl;
+	} catch (JsonRpcException &e) {
+		cerr << e.what() << endl;
+	}
+	return myv;
+}

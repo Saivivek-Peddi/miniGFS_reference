@@ -34,6 +34,7 @@ public:
   virtual Json::Value LookUp(const std::string& action, const std::string& arguments, const std::string& class_id, const std::string& fhandle, const std::string& filename, const std::string& host_url, const std::string& object_id, const std::string& owner_vsID);
   virtual Json::Value Create(const std::string& action, const std::string& arguments, const std::string& class_id, const std::string& created_class_id, const std::string& fhandle, const std::string& filename, const std::string& host_url, const std::string& object_id, const std::string& owner_vsID, const std::string& sattr);
   virtual Json::Value dumpJ(const std::string& action, const std::string& arguments, const std::string& class_id, const std::string& host_url, const std::string& object_id, const std::string& owner_vsID);
+  virtual Json::Value ReadChunk(const std::string& action, const std::string& arguments, const std::string& chunkindex, const std::string& class_id, const std::string& fhandle, const std::string& filename, const std::string& host_url, const std::string& object_id, const std::string& owner_vsID);
 };
 
 Myminigfs_Server::Myminigfs_Server(AbstractServerConnector &connector, serverVersion_t type)
@@ -78,6 +79,14 @@ Myminigfs_Server::CommitAbort
   	//
 	std::cout << "SecondaryA::CommitAbort() was hit with action = " << commitorabort << "\n";
 	result = secondaryReplicaA->CommitAbort(filename, fhandle, chunkindex, commitorabort);
+	return result;
+}
+
+Json::Value
+Myminigfs_Server::ReadChunk(const std::string& action, const std::string& arguments, const std::string& chunkindex, const std::string& class_id, const std::string& fhandle, const std::string& filename, const std::string& host_url, const std::string& object_id, const std::string& owner_vsID)
+{
+	Json::Value result;
+	result = secondaryReplicaA->ReadChunk(filename, fhandle, chunkindex);
 	return result;
 }
 

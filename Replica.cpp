@@ -51,7 +51,9 @@ Replica::Replica
   : Core { core_arg_host_url, core_arg_owner_vsID,
     core_arg_class_id, core_arg_object_id }
 {
-  std::cout << "a shadow has been created" << std::endl;
+  	std::cout << "a shadow has been created" << std::endl;
+	this->committed_data[0].data = "";
+	this->committed_data[1].data = "";
 }
 
 Replica::Replica
@@ -61,35 +63,48 @@ Replica::Replica
   : Core { core_arg_host_url, core_arg_owner_vsID,
     core_arg_class_id, core_arg_object_id }
 {
-  (this->committed_data).data = arg_data;
+  this->committed_data[0].data = arg_data;
+  this->committed_data[1].data = arg_data;
 }
 
 Json::Value
 Replica::CommitAbort
-(std::string arg_name, std::string arg_fhandle, std::string arg_chunk_index,
- std::string arg_commitorabort)
+(const std::string& arg_name, const std::string& arg_fhandle, const std::string& arg_chunk_index,
+ const std::string& arg_commitorabort)
 {
-  Json::Value result;
-  //
-  result["commitOrAbort"] = "abort";
-  if (arg_commitorabort == "commit")
-  {
-	  (this->committed_data).data = (this->uncommitted_data).data;
+	Json::Value result;
+	//
+	result["commitOrAbort"] = "abort";
+	int chunkIndex = std::stoi(arg_chunk_index);
+	if (chunkIndex != 0 && chunkIndex != 1)
+	{
+		result["commitOrAbort"] = "abort. chunk index out of bounds in Replica::CommitAbort()";
+		return result;
+	}
+	if (arg_commitorabort == "commit")
+	{
+	  this->committed_data[chunkIndex].data = this->uncommitted_data[chunkIndex].data;
 	  result["commitOrAbort"] = "commit";
-  }
-
-  return result;
+	}
+	
+	return result;
 }
 
 Json::Value
 Replica::PushChunk2Replica
-(std::string arg_name, std::string arg_fhandle, std::string arg_chunk_index, std::string arg_chunk)
+(const std::string& arg_name, const std::string& arg_fhandle, const std::string& arg_chunk_index, const std::string& arg_chunk)
 {
-  Json::Value result;
-  //
-  (this->uncommitted_data).data = arg_chunk;
-  result["status"] = "success";
-  return result;
+	Json::Value result;
+	//
+	int chunkIndex = std::stoi(arg_chunk_index);
+	if (chunkIndex != 0 && chunkIndex != 1)
+	{
+		result["status"] = "fail. chunk_index out of bounds in Replica::PushChunkk2Replica()";
+		return result;
+	}
+	this->uncommitted_data[chunkIndex].data = arg_chunk;
+	result["status"] = "success";
+	return result;
 }
 
 Json::Value *
@@ -136,5 +151,22 @@ Replica::Jdump(Json::Value *input_json_ptr)
   this->name    = ((*input_json_ptr)["name"]).asString();
   this->fhandle = ((*input_json_ptr)["fhandle"]).asString();
   return true;
+}
+
+
+Json::Value
+Replica::ReadChunk(const std::string& fileName, const std::string& fileHandle, const std::string& chunkIndex)
+{
+	Json::Value result;
+	int index = std::stoi(chunkIndex);
+	if (index != 0 && index != 1)
+	{
+		result["status"] = "fail. invalid chunk Index in Replica::ReadChunk()";
+		return result;
+	}
+	
+	result["status"] = "success";
+	result["data"] = this->committed_data[index].data;
+	return result;
 }
 

@@ -129,5 +129,27 @@
 	    "object_id": "0000000001",
 	    "result": "jsonstr"
         }
+    },
+  {
+    "name": "ReadChunk",
+    "params": {
+      "action": "ReadChunk",
+      "filename": "1234567890",
+      "fhandle": "1234567890",
+      "chunkindex": "1234567890",
+      "owner_vsID": "default",
+      "host_url": "server url",
+      "class_id": "Directory",
+      "object_id": "0000000001",
+      "arguments": "jsonstr"
+    },
+    "returns": {
+      "action": "read",
+      "owner_vsID": "1234567890",
+      "host_url": "1234567890",
+      "class_id": "transaction",
+      "object_id": "0000000001",
+      "result": "status"
     }
+  }
 ]

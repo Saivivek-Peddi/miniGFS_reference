@@ -4,12 +4,14 @@
 #include <iostream>
 #include "Shadow_Directory.h"
 #include "Shadow_Replica.h"
+#include "thread"
 
 using namespace std;
 
 int
 main()
 {
+	
   Shadow_Directory gfs_master 
   { "http://127.0.0.1:8384", "1234567890", "Directory", "00000002" };
 
@@ -29,7 +31,7 @@ main()
   Shadow_Replica gfs_secondary_B
   { url_secondary_B, "1234567890", "Replica", "00000003" };
 
-  std::string my_chunk_data = { "ecs251 data" };
+  std::string my_chunk_data = { "ecs251 data chunk 0" };
 
   result_P = gfs_primary.PushChunk2Replica("my_ecs251_file", "00000002", "0", my_chunk_data);
   result_A = gfs_secondary_A.PushChunk2Replica("my_ecs251_file", "00000002", "0", my_chunk_data);
@@ -44,6 +46,8 @@ main()
       result_A = gfs_secondary_A.CommitAbort("my_ecs251_file", "00000002", "0", "commit");
       result_B = gfs_secondary_B.CommitAbort("my_ecs251_file", "00000002", "0", "commit");
     }
-
+  
+  Json::Value readResult = gfs_primary.ReadChunk("my_ecs251_file", "00000002", "0");
+  
   return 0;
 }
