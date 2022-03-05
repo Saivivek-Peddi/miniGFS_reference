@@ -51,7 +51,9 @@ Replica::Replica
   : Core { core_arg_host_url, core_arg_owner_vsID,
     core_arg_class_id, core_arg_object_id }
 {
+#ifdef myDebug
   	std::cout << "a shadow has been created" << std::endl;
+#endif
 	this->committed_data[0].data = "";
 	this->committed_data[1].data = "";
 }
@@ -168,5 +170,16 @@ Replica::ReadChunk(const std::string& fileName, const std::string& fileHandle, c
 	result["status"] = "success";
 	result["data"] = this->committed_data[index].data;
 	return result;
+}
+
+Json::Value Replica::ReadFile(const std::string &fileName, const std::string &fileHandle) {
+    Json::Value result;
+
+    result["status"] = "success";
+    result["data"] = "chunk_0: " + this->committed_data[0].data
+                    + "    "
+                    + "chunk_1: " + this->committed_data[1].data;
+
+    return result;
 }
 

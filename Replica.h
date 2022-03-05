@@ -34,6 +34,7 @@ class Replica : public Core
   virtual Json::Value PushChunk2Replica(const std::string&, const std::string&, const std::string&, const std::string&);
   virtual Json::Value CommitAbort(const std::string&, const std::string&, const std::string&, const std::string&);
   virtual Json::Value ReadChunk(const std::string& fileName, const std::string& fileHandle, const std::string& chunkIndex);
+  virtual Json::Value ReadFile(const std::string& fileName, const std::string& fileHandle);
   virtual Json::Value * dumpJ();
   virtual bool Jdump(Json::Value *);
 };

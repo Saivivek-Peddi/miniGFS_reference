@@ -35,12 +35,15 @@ public:
   virtual Json::Value Create(const std::string& action, const std::string& arguments, const std::string& class_id, const std::string& created_class_id, const std::string& fhandle, const std::string& filename, const std::string& host_url, const std::string& object_id, const std::string& owner_vsID, const std::string& sattr);
   virtual Json::Value dumpJ(const std::string& action, const std::string& arguments, const std::string& class_id, const std::string& host_url, const std::string& object_id, const std::string& owner_vsID);
   virtual Json::Value ReadChunk(const std::string& action, const std::string& arguments, const std::string& chunkindex, const std::string& class_id, const std::string& fhandle, const std::string& filename, const std::string& host_url, const std::string& object_id, const std::string& owner_vsID);
+  virtual Json::Value ReadFile(const std::string& action, const std::string& arguments, const std::string& class_id, const std::string& fhandle, const std::string& filename, const std::string& host_url, const std::string& object_id, const std::string& owner_vsID);
 };
 
 Myminigfs_Server::Myminigfs_Server(AbstractServerConnector &connector, serverVersion_t type)
   : minigfs_Server(connector, type)
 {
+#ifdef myDebug
   std::cout << "Myminigfs_Server Object created" << std::endl;
+#endif
 }
 
 Directory *mounted;
@@ -63,7 +66,9 @@ Myminigfs_Server::PushChunk2Replica
 {
   	Json::Value result, pushResult;
   	//
+#ifdef myDebug
 	std::cout << "SecondaryB::PushChunk2Replica() was hit\n";
+#endif
 	pushResult = secondaryReplicaB->PushChunk2Replica(filename, fhandle, chunkindex, chunk);
 	if (pushResult["status"] == "success")
 		result["vote"] = "commit";
@@ -77,7 +82,9 @@ Myminigfs_Server::CommitAbort
 {
   Json::Value result;
   //
+#ifdef myDebug
   std::cout << "SecondaryB::CommitAbort() was hit with action = " << commitorabort << "\n";
+#endif
   result = secondaryReplicaB->CommitAbort(filename, fhandle, chunkindex, commitorabort);
   return result;
 }
@@ -88,6 +95,15 @@ Myminigfs_Server::ReadChunk(const std::string& action, const std::string& argume
 	Json::Value result;
 	result = secondaryReplicaB->ReadChunk(filename, fhandle, chunkindex);
 	return result;
+}
+
+Json::Value
+Myminigfs_Server::ReadFile(const string &action, const string &arguments, const string &class_id, const string &fhandle,
+                           const string &filename, const string &host_url, const string &object_id,
+                           const string &owner_vsID){
+    Json::Value result;
+    result = secondaryReplicaB->ReadFile(filename, fhandle);
+    return result;
 }
 
 Json::Value

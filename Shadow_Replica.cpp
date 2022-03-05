@@ -14,7 +14,9 @@ Shadow_Replica::Shadow_Replica
  std::string arg_object_id)
   : Replica { arg_host_url, arg_vsID, arg_class_id, arg_object_id }
 {
+#ifdef myDebug
   std::cout << "Shadow created" << std::endl;
+#endif
 }
 
 Json::Value
@@ -27,14 +29,19 @@ Shadow_Replica::CommitAbort
   Json::Value myv;
 
   try {
-    std::cout << "calling NFS LookUp" << std::endl;
+
+#ifdef myDebug
+    std::cout << "calling NFS LookUp ShadowReplica::CommitAbort()" << std::endl;
+#endif
 
     myv = myClient.CommitAbort("CommitAbort", "This is a Directory JSON string!",
 			       arg_chunk_index,
-			       (this->class_id).c_str(), arg_commitorabort, arg_fhandle, arg_name,
-			       (this->host_url).c_str(),
-			       (this->object_id).c_str(), (this->owner_vsID).c_str());
+			       this->class_id, arg_commitorabort, arg_fhandle, arg_name,
+			       this->host_url,
+			       this->object_id, this->owner_vsID);
+#ifdef myDebug
     cout << myv.toStyledString() << endl;
+#endif
   } catch (JsonRpcException &e) {
     cerr << e.what() << endl;
   }
@@ -50,14 +57,18 @@ Shadow_Replica::PushChunk2Replica
   Json::Value myv;
 
   try {
-    std::cout << "calling NFS LookUp" << std::endl;
+#ifdef myDebug
+    std::cout << "calling NFS LookUp ShadowReplica::PushChunk2Replica()" << std::endl;
+#endif
 
     myv = myClient.PushChunk2Replica("PushChunk2Replica", "This is a Directory JSON string!",
 				     arg_chunk, arg_chunk_index,
-				     (this->class_id).c_str(), arg_fhandle, arg_name,
-				     (this->host_url).c_str(),
-				     (this->object_id).c_str(), (this->owner_vsID).c_str());
+				     this->class_id, arg_fhandle, arg_name,
+				     this->host_url,
+				     this->object_id, this->owner_vsID);
+#ifdef myDebug
     cout << myv.toStyledString() << endl;
+#endif
   } catch (JsonRpcException &e) {
     cerr << e.what() << endl;
   }
@@ -101,16 +112,44 @@ Json::Value Shadow_Replica::ReadChunk(const string& fileName, const string& file
 	Json::Value myv;
 
 	try {
-		std::cout << "calling Read Chunk LookUp" << std::endl;
+#ifdef myDebug
+		std::cout << "calling ShadowReplica::Read Chunk()" << std::endl;
+#endif
 
 		myv = myClient.ReadChunk("ReadChunk", "This is a Read Chunk JSON string!",
 			chunkIndex, this->class_id,
 			fileHandle, fileName, this->host_url,
 			this->object_id,
 			this->owner_vsID);
+#ifdef myDebug
 		cout << myv.toStyledString() << endl;
+#endif
 	} catch (JsonRpcException &e) {
 		cerr << e.what() << endl;
 	}
 	return myv;
+}
+
+Json::Value Shadow_Replica::ReadFile(const string &fileName, const string &fileHandle) {
+    HttpClient httpclient(this->host_url);
+    minigfs_Client myClient(httpclient, JSONRPC_CLIENT_V2);
+    Json::Value myv;
+
+    try {
+#ifdef myDebug
+        std::cout << "calling ShadowReplica::ReadFile()" << std::endl;
+#endif
+
+        myv = myClient.ReadFile("ReadFile", "This is a Read File JSON string!",
+                                  this->class_id,
+                                 fileHandle, fileName, this->host_url,
+                                 this->object_id,
+                                 this->owner_vsID);
+#ifdef myDebug
+        cout << myv.toStyledString() << endl;
+#endif
+    } catch (JsonRpcException &e) {
+        cerr << e.what() << endl;
+    }
+    return myv;
 }

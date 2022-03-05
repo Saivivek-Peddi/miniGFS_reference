@@ -14,6 +14,7 @@ class Shadow_Replica : public Replica
   virtual Json::Value * dumpJ();
   virtual bool Jdump(Json::Value *);
   virtual Json::Value ReadChunk(const std::string& fileName, const std::string& fileHandle, const std::string& chunkIndex);
+  virtual Json::Value ReadFile(const std::string& fileName, const std::string& fileHandle);
 };
 
 #endif // _SHADOW_REPLICATE_H_

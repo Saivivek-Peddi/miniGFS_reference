@@ -14,25 +14,32 @@ Shadow_Directory::Shadow_Directory
  std::string arg_object_id)
   : Directory { arg_host_url, arg_vsID, arg_class_id, arg_object_id }
 {
+#ifdef myDebug
   std::cout << "Shadow created" << std::endl;
+#endif
 }
 
 Json::Value
 Shadow_Directory::ObtainChunkURL
 (std::string arg_name, std::string arg_fhandle, std::string arg_chunk_index)
 {
-  HttpClient httpclient((this->host_url).c_str());
+  HttpClient httpclient(this->host_url);
   minigfs_Client myClient(httpclient, JSONRPC_CLIENT_V2);
   Json::Value myv;
 
   try {
+#ifdef myDebug
     std::cout << "calling NFS LookUp" << std::endl;
+#endif
 
     myv = myClient.ObtainChunkURL("ObtainChunkURL", "This is a Directory JSON string!",
-			  arg_chunk_index, (this->class_id).c_str(), arg_fhandle, arg_name,
-			  (this->host_url).c_str(),
-			  (this->object_id).c_str(), (this->owner_vsID).c_str());
+			  arg_chunk_index, this->class_id, arg_fhandle, arg_name,
+			  this->host_url,
+			  this->object_id, this->owner_vsID);
+
+#ifdef myDebug
     cout << myv.toStyledString() << endl;
+#endif
   } catch (JsonRpcException &e) {
     cerr << e.what() << endl;
   }
@@ -43,7 +50,7 @@ Json::Value
 Shadow_Directory::LookUp
 (std::string arg_dir_fhandle, std::string arg_name)
 {
-  HttpClient httpclient((this->host_url).c_str());
+  HttpClient httpclient(this->host_url);
   minigfs_Client myClient(httpclient, JSONRPC_CLIENT_V2);
   Json::Value myv;
 
@@ -51,9 +58,9 @@ Shadow_Directory::LookUp
     std::cout << "calling NFS LookUp" << std::endl;
 
     myv = myClient.LookUp("LookUp", "This is a Directory JSON string!",
-			  (this->class_id).c_str(), arg_dir_fhandle, arg_name,
-			  (this->host_url).c_str(),
-			  (this->object_id).c_str(), (this->owner_vsID).c_str());
+			  this->class_id, arg_dir_fhandle, arg_name,
+			  this->host_url,
+			  this->object_id, this->owner_vsID);
     cout << myv.toStyledString() << endl;
   } catch (JsonRpcException &e) {
     cerr << e.what() << endl;

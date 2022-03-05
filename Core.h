@@ -12,6 +12,18 @@
 
 #include <iostream>
 
+#ifndef myDebug
+#define myDebug
+#endif
+
+#ifndef myRelease
+#define myRelease
+#endif
+
+#ifdef myRelease
+#undef myDebug
+#endif
+
 class Core
 {
  private:
