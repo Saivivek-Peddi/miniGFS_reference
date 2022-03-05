@@ -87,9 +87,17 @@ void readFile()
     Shadow_Replica gfs_primary
             { url_primary, "1234567890", "Replica", "00000001" };
 
+    std::string url_secondary_A = (result["secondary_A"]).asString();
+    Shadow_Replica gfs_secondary_A
+            { url_secondary_A, "1234567890", "Replica", "00000002" };
+
+    std::string url_secondary_B = (result["secondary_B"]).asString();
+    Shadow_Replica gfs_secondary_B
+            { url_secondary_B, "1234567890", "Replica", "00000003" };
+
     Json::Value readResultP = gfs_primary.ReadFile("my_ecs251_file", "00000002");
-    Json::Value readResultSA = gfs_primary.ReadFile("my_ecs251_file", "00000002");
-    Json::Value readResultSB = gfs_primary.ReadFile("my_ecs251_file", "00000002");
+    Json::Value readResultSA = gfs_secondary_A.ReadFile("my_ecs251_file", "00000002");
+    Json::Value readResultSB = gfs_secondary_B.ReadFile("my_ecs251_file", "00000002");
 
     if(readResultP["data"] == readResultSA["data"] && readResultSA["data"] == readResultSB["data"])
     {
