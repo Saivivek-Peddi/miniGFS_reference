@@ -83,9 +83,16 @@ Directory::ObtainChunkURL
 (std::string arg_name, std::string arg_fhandle, std::string arg_chunk_index)
 {
   Json::Value result;
-  result["primary"]      = (this->the_chunk).chunk_url_primary;
-  result["secondary_A"]  = (this->the_chunk).chunk_url_secondary_A;
-  result["secondary_B"]  = (this->the_chunk).chunk_url_secondary_B;
+  int chunkIndex = std::stoi(arg_chunk_index);
+  if(chunkIndex != 0 && chunkIndex != 1)
+  {
+      result["status"] = "fail. chunkIndex out of bounds in Directory::ObtainChunkURL()";
+      return result;
+  }
+  result["status"] = "success";
+  result["primary"]      = (this->the_chunk[chunkIndex]).chunk_url_primary;
+  result["secondary_A"]  = (this->the_chunk[chunkIndex]).chunk_url_secondary_A;
+  result["secondary_B"]  = (this->the_chunk[chunkIndex]).chunk_url_secondary_B;
   return result;
 }
 

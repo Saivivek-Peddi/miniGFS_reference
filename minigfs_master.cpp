@@ -75,7 +75,6 @@ Myminigfs_Server::ObtainChunkURL
 #endif
 
   result["timestamp"] = std::chrono::duration_cast<std::chrono::microseconds>(p.time_since_epoch()).count();
-  result["chunkIndex"] = chunkindex;
   return result;
 }
 
@@ -190,9 +189,13 @@ main()
 
   mounted = (&GFS_root);
 
-  (mounted->the_chunk).chunk_url_primary = "http://127.0.0.1:8300";
-  (mounted->the_chunk).chunk_url_secondary_A = "http://127.0.0.1:8301";
-  (mounted->the_chunk).chunk_url_secondary_B = "http://127.0.0.1:8302";
+  (mounted->the_chunk[0]).chunk_url_primary = "http://127.0.0.1:8300";
+  (mounted->the_chunk[0]).chunk_url_secondary_A = "http://127.0.0.1:8301";
+  (mounted->the_chunk[0]).chunk_url_secondary_B = "http://127.0.0.1:8302";
+
+  (mounted->the_chunk[1]).chunk_url_primary = "http://127.0.0.1:8300";
+  (mounted->the_chunk[1]).chunk_url_secondary_A = "http://127.0.0.1:8301";
+  (mounted->the_chunk[1]).chunk_url_secondary_B = "http://127.0.0.1:8302";
 
   HttpServer httpserver(8384);
   Myminigfs_Server s(httpserver,

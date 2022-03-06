@@ -1,5 +1,6 @@
 
 #include "Replica.h"
+#include <chrono>
 
 Chunk::Chunk()
 {
@@ -85,7 +86,11 @@ Replica::CommitAbort
 	}
 	if (arg_commitorabort == "commit")
 	{
-	  this->committed_data[chunkIndex].data = this->uncommitted_data[chunkIndex].data;
+	  this->committed_data[chunkIndex].data = this->uncommitted_data[chunkIndex].data
+              + "|" +
+              std::to_string(
+              std::chrono::duration_cast<std::chrono::microseconds>(
+                      std::chrono::system_clock::now().time_since_epoch()).count());
 	  result["commitOrAbort"] = "commit";
 	}
 	
