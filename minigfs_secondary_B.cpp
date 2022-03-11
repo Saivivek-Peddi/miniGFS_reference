@@ -85,7 +85,9 @@ Myminigfs_Server::CommitAbort
 #ifdef myDebug
   std::cout << "SecondaryB::CommitAbort() was hit with action = " << commitorabort << "\n";
 #endif
-//    sleep(1);
+#ifdef simulateFailure
+    sleep(1);
+#endif
   result = secondaryReplicaB->CommitAbort(filename, fhandle, chunkindex, commitorabort);
   return result;
 }

@@ -16,6 +16,8 @@
 
 #define myRelease
 
+//#define simulateFailure
+
 #ifdef myRelease
 #undef myDebug
 #endif

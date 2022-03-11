@@ -8,12 +8,12 @@
 #include <unistd.h>
 #include <vector>
 
-#define mySerial
+#define simulateSerial
 
-#define myConcurrent
+//#define simulateConcurrent
 
-#ifdef myConcurrent
-#undef mySerial
+#ifdef simulateConcurrent
+#undef simulateSerial
 #endif
 
 Json::Value retrieveDataAndTimeStamp(Json::Value in)
@@ -190,7 +190,7 @@ int
 main()
 {
     std::thread writeClient1 {writeChunk, 0, "ecs 251 client0 writing to chunk 0"};
-#ifdef mySerial
+#ifdef simulateSerial
     usleep(100000); // 0.1 second
 #endif
     std::thread writeClient2 {writeChunk, 1, "ecs 251 client1 writing to chunk 1"};
