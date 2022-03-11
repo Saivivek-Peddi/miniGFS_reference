@@ -24,6 +24,7 @@ which results in inconsistency when reading data
 - Restart `./minigfs_secondary_B` to run the updated binary without failure case
 - Run `./minigfs_client` to write data to all three servers and observe the log printed
 - As the main thread sleeps for 0.1 second before starting client2 thread, we can simulate serial writes, which is defined
+- ![Output will look like this](/assets/serial-defined.png)
 
 
 ### Simulate Concurrent:Consistent Case:
@@ -33,7 +34,8 @@ which results in inconsistency when reading data
 - Run `./minigfs_client` to write data to all three servers and observe the log printed
 - Here, both client1 thread and client2 thread start concurrently. So, we can simulate concurrent writes, which is consistent but undefined
 - Since client1 and client2 are threads running concurrently, there is a chance which can lead to defined case as well. 
-Please run `./minigfs_client` multiple times to observe consistent but undefined case 
+Please run `./minigfs_client` multiple times to observe consistent but undefined case
+- ![Output will look like this](/assets/concurrent-consistent.png)
 
 
 ### All cases:
