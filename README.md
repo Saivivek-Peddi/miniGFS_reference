@@ -1,3 +1,5 @@
+### The assignment has been graded by Professor Wu on March 11, 4.40pm during his zoom office hours.
+
 ## Homework Assignment 3
 
 We are using threads to simulate concurrent and serial writes from multiple clients in minigfs_client.cpp
@@ -33,8 +35,8 @@ which results in inconsistency when reading data
 - Run `make` to compile and produce binaries
 - Run `./minigfs_client` to write data to all three servers and observe the log printed
 - Here, both client1 thread and client2 thread start concurrently. So, we can simulate concurrent writes, which is consistent but undefined
-- Since client1 and client2 are threads running concurrently, there is a chance which can lead to defined case as well. 
-Please run `./minigfs_client` multiple times to observe consistent but undefined case
+- **Since client1 and client2 are threads running concurrently, there is a chance which can lead to defined case as well. 
+Please run `./minigfs_client` multiple times to observe consistent but undefined case**
 - ![Output will look like this](/assets/concurrent-consistent.png)
 
 
