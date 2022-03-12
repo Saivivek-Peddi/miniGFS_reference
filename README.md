@@ -1,4 +1,4 @@
-## Homework Assignment 2
+### The assignment has been graded by Professor Wu on March 11, 4.40pm during his zoom office hours.
 
 ### Steps:
 
