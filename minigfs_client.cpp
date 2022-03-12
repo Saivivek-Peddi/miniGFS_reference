@@ -10,7 +10,7 @@
 
 #define simulateSerial
 
-//#define simulateConcurrent
+#define simulateConcurrent
 
 #ifdef simulateConcurrent
 #undef simulateSerial
@@ -167,15 +167,7 @@ void readFile()
             std::cout << "Reading File is defined as all replicas wrote Chunk0 first and then Chunk1 \n";
             return;
         }
-        if(     (readTimestampP[0] > readTimestampP[1]) &&
-                (readTimestampSA[0] > readTimestampSA[1]) &&
-                (readTimestampSB[0] > readTimestampSB[1])
-                )
-        {
-            std::cout << "Reading File is defined as all replicas wrote Chunk1 first and then Chunk0 \n";
-            return;
-        }
-        std::cout << "Reading File is undefined! \n";
+        std::cout << "Reading File is undefined! as the order of writing chunks is NOT Chunk0 first and then Chunk1\n";
     }
     else
     {
